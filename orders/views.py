@@ -1,4 +1,5 @@
 import json
+from django.urls import reverse
 import requests
 from django.conf import settings
 from django.http import HttpResponse, JsonResponse
@@ -32,7 +33,9 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 @login_required(login_url="login")
 def stripe_payment(request):
     if request.method == 'GET':
-        domain_url = settings.DOMAIN_URL
+        domain_url = getattr(settings, 'DOMAIN_URL')
+        success_url = domain_url + reverse('stripe_success') + '?session_id={CHECKOUT_SESSION_ID}'
+        cancel_url = domain_url + reverse('stripe_cancel')
         stripe.api_key = settings.STRIPE_SECRET_KEY
         
         try:
@@ -41,8 +44,8 @@ def stripe_payment(request):
             
             # Créez une nouvelle session de paiement Stripe
             checkout_session = stripe.checkout.Session.create(
-                success_url=domain_url + 'success?session_id={CHECKOUT_SESSION_ID}',
-                cancel_url=domain_url + 'cancelled/',
+                success_url=success_url,
+                cancel_url=cancel_url,
                 payment_method_types=['card'],
                 mode='payment',
                 line_items=[
@@ -155,11 +158,11 @@ def stripe_payment(request):
 
 @login_required(login_url="login")
 def stripe_success(request):
-    return render(request, 'orders/success.html')
+    return render(request, 'orders/stripe_success.html')
 
 @login_required(login_url="login")
 def stripe_cancel(request):
-    return render(request, 'orders/cancel.html')
+    return render(request, 'orders/stripe_cancel.html')
 
 # payments/views.py
 @login_required(login_url="login")

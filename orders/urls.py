@@ -7,8 +7,8 @@ path('place_order/', views.place_order, name='place_order'),
 path('paypal_payment/', views.paypal_payment, name='paypal_payment'),
 path('stripe_payment/', views.stripe_payment, name='stripe_payment'),
 
-# path('stripe_success/', views.stripe_success, name='stripe_success'),
-# path('stripe_cancel/', views.stripe_cancel, name='stripe_cancel'),
+path('stripe_success/', views.stripe_success, name='stripe_success'),
+path('stripe_cancel/', views.stripe_cancel, name='stripe_cancel'),
 path('webhook/', views.stripe_webhook, name="webhook"), # new
 path('config/', views.stripe_config, name="config"),
 

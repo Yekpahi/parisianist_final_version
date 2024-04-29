@@ -9,9 +9,9 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 DEBUG = True
 PRODUCTION = os.environ.get("PRODUCTION")
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
-
+DOMAIN_URL             = os.getenv("DOMAIN_URL", "http://127.0.0.1:8000/")
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 

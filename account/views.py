@@ -156,6 +156,7 @@ def activate(request, uidb64, token):
         return redirect('register')
 
 @login_required(login_url="login")
+
 def dashboard(request):
     return render(request, 'account/dashboard/dashboard.html')
 
