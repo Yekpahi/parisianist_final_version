@@ -21,27 +21,29 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 
 
-
 @csrf_exempt
 def stripe_config(request):
     if request.method == 'GET':
         stripe_config = {'publicKey': settings.STRIPE_PUBLIC_KEY}
         return JsonResponse(stripe_config, safe=False)
-    
-    
+
+
 stripe.api_key = settings.STRIPE_SECRET_KEY
+
+
 @login_required(login_url="login")
 def stripe_payment(request):
     if request.method == 'GET':
         domain_url = getattr(settings, 'DOMAIN_URL')
-        success_url = domain_url + reverse('stripe_success') + '?session_id={CHECKOUT_SESSION_ID}'
+        success_url = domain_url + \
+            reverse('stripe_success') + '?session_id={CHECKOUT_SESSION_ID}'
         cancel_url = domain_url + reverse('stripe_cancel')
         stripe.api_key = settings.STRIPE_SECRET_KEY
-        
+
         try:
             # Créez ou récupérez la commande
             order = Order.objects.get(user=request.user, is_ordered=False)
-            
+
             # Créez une nouvelle session de paiement Stripe
             checkout_session = stripe.checkout.Session.create(
                 success_url=success_url,
@@ -61,7 +63,7 @@ def stripe_payment(request):
                     }
                 ]
             )
-            
+
             # Récupérez les produits de la commande
             order_products = order.orderproduct_set.all()
             line_items = []
@@ -148,24 +150,25 @@ def stripe_payment(request):
                 'transID': payment.payment_id,
                 'sessionId': checkout_session['id']
             }
-            
 
             # Autres actions...
             return JsonResponse(data)
         except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)  # Retournez une réponse JSON avec l'erreur et un statut 500 en cas d'erreur
+            # Retournez une réponse JSON avec l'erreur et un statut 500 en cas d'erreur
+            return JsonResponse({'error': str(e)}, status=500)
 # Stripe payment
 
-@login_required(login_url="login")
+
 def stripe_success(request):
     return render(request, 'orders/stripe_success.html')
 
-@login_required(login_url="login")
+
 def stripe_cancel(request):
     return render(request, 'orders/stripe_cancel.html')
 
 # payments/views.py
-@login_required(login_url="login")
+
+
 @csrf_exempt
 def stripe_webhook(request):
     stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -191,6 +194,8 @@ def stripe_webhook(request):
         # TODO: run some custom code here
 
     return HttpResponse(status=200)
+
+
 @login_required(login_url="login")
 def paypal_payment(request):
     body = json.loads(request.body)
@@ -257,12 +262,10 @@ def paypal_payment(request):
     return JsonResponse(data)
 
 
-
-
 # Orders
 @login_required(login_url="login")
 def place_order(request, total=0, quantity=0):
-    
+
     pub_key = settings.STRIPE_PUBLIC_KEY
     current_user = request.user
     cart_items = CartItem.objects.filter(user=current_user)
@@ -283,25 +286,25 @@ def place_order(request, total=0, quantity=0):
     taxdhl = 50
     grand_total = round((total + tax), 2)
     grand_total_dhl += grand_total + taxdhl
-    
-    #Only for local 
+
+    # Only for local
     if settings.DEBUG:
-                # Utilisation de l'API ipify pour obtenir une adresse IP publique
-            response = requests.get('https://api.ipify.org?format=json')
-            if response.status_code == 200:
-                ip_data = response.json()
-                user_ip = ip_data.get('ip')
-            else:
-                    # Fallback à une adresse IP locale si l'appel à l'API échoue
-                user_ip = '127.0.0.1'
+        # Utilisation de l'API ipify pour obtenir une adresse IP publique
+        response = requests.get('https://api.ipify.org?format=json')
+        if response.status_code == 200:
+            ip_data = response.json()
+            user_ip = ip_data.get('ip')
+        else:
+            # Fallback à une adresse IP locale si l'appel à l'API échoue
+            user_ip = '127.0.0.1'
     else:
         user_ip = request.META.get('REMOTE_ADDR')
-    #And only for local
-    
-    #active for production
+    # And only for local
+
+    # active for production
     # user_ip = request.META.get('REMOTE_ADDR', '')
-    #End active for production
-    
+    # End active for production
+
     g = GeoIP2()
     user_country = None
     try:
@@ -397,7 +400,7 @@ def place_order(request, total=0, quantity=0):
     }
     return render(request, 'orders/place_order.html', context)
 
-@login_required(login_url="login")
+
 def order_complete(request):
     order_number = request.GET.get('order_number')
     transID = request.GET.get('payment_id')

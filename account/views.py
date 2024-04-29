@@ -111,7 +111,7 @@ def login(request):
             except:
                 pass
             auth.login(request, user)
-            messages.success(request, "You are log in.")
+            messages.success(request, "You are log in.", extra_tags='login_success')
             # Start Here we make the redirect system if the user finishes to authentificate himself
             url = request.META.get('HTTP_REFERER')
             try :
@@ -125,7 +125,7 @@ def login(request):
                 return redirect('dashboard')
         # Start Here we make the redirect system if the user finishes to authentificate himself
         else:
-            messages.success(request, "Invalid login credentials")
+            messages.error(request, "Invalid login credentials", extra_tags='login_error')
             return redirect('login')
 
     return render(request, 'account/login.html')
@@ -133,7 +133,7 @@ def login(request):
 @login_required(login_url='login')
 def logout(request):
     auth.logout(request)
-    messages.success(request, "You are logged out.")
+    messages.success(request, "You are logged out.", extra_tags='login_success')
     return redirect('home')
 
 # Account activation
@@ -149,10 +149,10 @@ def activate(request, uidb64, token):
     if user is not None and default_token_generator.check_token(user, token):
         user.is_active = True
         user.save()
-        messages.success(request, 'Congratulation your account is activated!!')
+        messages.success(request, 'Congratulation your account is activated!!', extra_tags='activate_success')
         return redirect('login')
     else:
-        messages.error(request, 'Invalid activation link.')
+        messages.error(request, 'Invalid activation link.', extra_tags='activate_error')
         return redirect('register')
 
 @login_required(login_url="login")
@@ -169,7 +169,7 @@ def edit_profile(request):
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
-            messages.success(request, 'Your profile has been updated.')
+            messages.success(request, 'Your profile has been updated.', extra_tags='edit_profile_success')
             return redirect('edit_profile')
     else:
         user_form = UserForm(instance=request.user)
@@ -201,10 +201,10 @@ def forgotPassword(request) :
             send_email = EmailMessage(mail_subject, message, to=[to_email])
             send_email.send()
             
-            messages.success(request, "Password reset email has been sent to your email address!!")
+            messages.success(request, "Password reset email has been sent to your email address!!",  extra_tags='pwdf_success')
             return redirect('login')
         else:
-             messages.error(request, 'User does not exists')
+             messages.error(request, 'User does not exists', extra_tags='pwdf_error')
              return redirect('forgotPassword')
     return render(request, 'account/forgotPassword.html')
             
@@ -217,10 +217,10 @@ def resetpassword_validate(request, uidb64, token) :
 
     if user is not None and default_token_generator.check_token(user, token):
         request.session['uid'] = uid
-        messages.success(request, 'Please reset your password')
+        messages.success(request, 'Please reset your password', extra_tags='pwdresetvalidate_success')
         return redirect('resetPassword')
     else:
-        messages.error(request, 'This link has been expired!')
+        messages.error(request, 'This link has been expired!', extra_tags='pwdresetvalidate_error')
         return redirect('register')
 
 def resetPassword(request) :
@@ -233,10 +233,10 @@ def resetPassword(request) :
             user = Account.objects.get(pk=uid)
             user.set_password(password)
             user.save()
-            messages.success(request, "Password reset successful!!")
+            messages.success(request, "Password reset successful!!", extra_tags='pwdreset_success')
             return redirect('login')
         else:
-            messages.error(request, 'Password reset successful')
+            messages.error(request, 'Password reset successful', extra_tags='pwdreset_error')
             return redirect('resetPassword')
     else:
         return render(request, 'account/resetPassword.html')
@@ -277,10 +277,10 @@ def change_password(request):
                 user.set_password(new_password)
                 user.save()
                 # auth.Logout(request)
-                messages.success(request, 'Password Updated Successfully.')
+                messages.success(request, 'Password Updated Successfully.', extra_tags='change_password_success')
                 return redirect('change_password')
             else:
-                messages.error(request, 'Please enter valid current password')
+                messages.error(request, 'Please enter valid current password', extra_tags='change_password_error')
                 return redirect('change_password')
         else:
             messages.error(request, 'Password does not match!')

@@ -119,3 +119,9 @@ body {
 .form form .form-child {
   margin-bottom: 20px;
 }
+
+.login-error-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

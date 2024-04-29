@@ -15,9 +15,28 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   </head>
   <body>
+
     <div class="login-contents-container">
       <ul>
         <li class="log-in_title">LOG IN</li>
+        <li class="login-error-message">    
+          {% if messages %}
+          <div class="available_message" role="alert" id="error-message">
+            {% for message in messages %}
+              {% if 'login_error' in message.tags %}
+                <span>{{ message }}</span>
+              {% endif %}
+            {% endfor %}
+          </div>
+          <div class="available_message" role="alert" id="success-message">
+            {% for message in messages %}
+              {% if 'login_success' in message.tags %}
+                <span>{{ message }}</span>
+              {% endif %}
+            {% endfor %}
+          </div>
+        {% endif %}
+      </li>
         <li class="form">
           <form action="{% url 'login' %}" method="POST">
             {% csrf_token %}
