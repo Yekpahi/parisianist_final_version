@@ -54,10 +54,6 @@
       }
 
       @media (max-width: 620px) {
-        .social_block.desktop_hide .social-table {
-          display: inline-block !important;
-        }
-
         .mobile_hide {
           display: none;
         }
@@ -85,10 +81,12 @@
           max-height: none !important;
         }
 
-        .row-2 .column-1 .block-1.paragraph_block td.pad > div,
-        .row-2 .column-1 .block-2.heading_block h3,
-        .row-2 .column-1 .block-3.paragraph_block td.pad > div {
+        .row-2 .column-1 .block-2.heading_block h3 {
           font-size: 11px !important;
+        }
+
+        .row-2 .column-1 .block-1.paragraph_block td.pad > div {
+          font-size: 9px !important;
         }
 
         .row-2 .column-1 .block-1.paragraph_block td.pad {
@@ -96,7 +94,16 @@
         }
 
         .row-1 .column-2 .block-1.heading_block h3 {
-          font-size: 21px !important;
+          text-align: center !important;
+        }
+
+        .row-1 .column-2 .block-1.heading_block h3 {
+          font-size: 19px !important;
+        }
+
+        .row-2 .column-1 .block-3.paragraph_block td.pad > div {
+          text-align: center !important;
+          font-size: 10px !important;
         }
       }
     </style>
@@ -259,9 +266,7 @@
                                       mso-line-height-alt: 18px;
                                     "
                                   >
-                                    <span class="tinyMce-placeholder"
-                                      >colis en cours de livraison</span
-                                    >
+                                    package in course of delivery
                                   </h3>
                                 </td>
                               </tr>
@@ -351,13 +356,13 @@
                                       mso-line-height-alt: 19.2px;
                                     "
                                   >
-                                    <p style="margin: 0; margin-bottom: 10px">
-                                      Bonjour {{ order.first_name }} {{ order.last_name }}, votre commande numéro {{ order.order_number }} a été reçue et se
-                                      rapproche de vous 
-                                    </p>
                                     <p style="margin: 0">
-                                      Si vous avez des questions ou avez besoin
-                                      d’aide supplémentaire, contactez nous...
+                                      Hello Marc-Henri Kouassi, your Parisianist
+                                      order has been received and is getting
+                                      closer to you! If you have any questions
+                                      or need further assistance, please click
+                                      the button below to contact Colis Prive or
+                                      contact customer service.
                                     </p>
                                   </div>
                                 </td>
@@ -394,8 +399,8 @@
                                     "
                                   >
                                     <span class="tinyMce-placeholder"
-                                      >Votre numéro de suivi est :
-                                      {{ order.tracking_number }}</span
+                                      >Your tracking number is :
+                                      {{order.tracking_number}}</span
                                     >
                                   </h3>
                                 </td>
@@ -430,259 +435,9 @@
                                     "
                                   >
                                     <p style="margin: 0">
-                                      Cliqué sur ce lien pour suivre votre colis
-                                      <a href="#">Suivre votre colis</a> 
+                                      Click on this link to track your package :
+                                      www.colissimo.com
                                     </p>
-                                  </div>
-                                </td>
-                              </tr>
-                            </table>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <table
-              align="center"
-              border="0"
-              cellpadding="0"
-              cellspacing="0"
-              class="row row-3"
-              role="presentation"
-              style="
-                mso-table-lspace: 0pt;
-                mso-table-rspace: 0pt;
-                background-color: #000000;
-              "
-              width="100%"
-            >
-              <tbody>
-                <tr>
-                  <td>
-                    <table
-                      align="center"
-                      border="0"
-                      cellpadding="0"
-                      cellspacing="0"
-                      class="row-content stack"
-                      role="presentation"
-                      style="
-                        mso-table-lspace: 0pt;
-                        mso-table-rspace: 0pt;
-                        color: #000000;
-                        width: 600px;
-                        margin: 0 auto;
-                      "
-                      width="600"
-                    >
-                      <tbody>
-                        <tr>
-                          <td
-                            class="column column-1"
-                            style="
-                              mso-table-lspace: 0pt;
-                              mso-table-rspace: 0pt;
-                              font-weight: 400;
-                              text-align: left;
-                              padding-bottom: 5px;
-                              padding-top: 5px;
-                              vertical-align: top;
-                              border-top: 0px;
-                              border-right: 0px;
-                              border-bottom: 0px;
-                              border-left: 0px;
-                            "
-                            width="50%"
-                          >
-                            <table
-                              border="0"
-                              cellpadding="0"
-                              cellspacing="0"
-                              class="html_block block-1"
-                              role="presentation"
-                              style="
-                                mso-table-lspace: 0pt;
-                                mso-table-rspace: 0pt;
-                              "
-                              width="100%"
-                            >
-                              <tr>
-                                <td class="pad">
-                                  <div
-                                    align="center"
-                                    style="
-                                      font-family: Arial, Helvetica, sans-serif;
-                                      text-align: center;
-                                    "
-                                  >
-                                    <div style="height: 20px"> </div>
-                                  </div>
-                                </td>
-                              </tr>
-                            </table>
-                            <table
-                              border="0"
-                              cellpadding="0"
-                              cellspacing="0"
-                              class="social_block block-2"
-                              role="presentation"
-                              style="
-                                mso-table-lspace: 0pt;
-                                mso-table-rspace: 0pt;
-                              "
-                              width="100%"
-                            >
-                              <tr>
-                                <td
-                                  class="pad"
-                                  style="
-                                    text-align: left;
-                                    padding-right: 0px;
-                                    padding-left: 0px;
-                                  "
-                                >
-                                  <div align="left" class="alignment">
-                                    <table
-                                      border="0"
-                                      cellpadding="0"
-                                      cellspacing="0"
-                                      class="social-table"
-                                      role="presentation"
-                                      style="
-                                        mso-table-lspace: 0pt;
-                                        mso-table-rspace: 0pt;
-                                        display: inline-block;
-                                      "
-                                      width="188px"
-                                    >
-                                      <tr>
-                                        <td style="padding: 0 15px 0 0">
-                                          <a
-                                            href="https://www.facebook.com/"
-                                            target="_blank"
-                                            ><img
-                                              alt="Facebook"
-                                              height="auto"
-                                              src="images/facebook2x.png"
-                                              style="
-                                                display: block;
-                                                height: auto;
-                                                border: 0;
-                                              "
-                                              title="Facebook"
-                                              width="32"
-                                          /></a>
-                                        </td>
-                                        <td style="padding: 0 15px 0 0">
-                                          <a
-                                            href="https://twitter.com/"
-                                            target="_blank"
-                                            ><img
-                                              alt="Twitter"
-                                              height="auto"
-                                              src="images/twitter2x.png"
-                                              style="
-                                                display: block;
-                                                height: auto;
-                                                border: 0;
-                                              "
-                                              title="Twitter"
-                                              width="32"
-                                          /></a>
-                                        </td>
-                                        <td style="padding: 0 15px 0 0">
-                                          <a
-                                            href="https://plus.google.com/"
-                                            target="_blank"
-                                            ><img
-                                              alt="Google+"
-                                              height="auto"
-                                              src="images/googleplus2x.png"
-                                              style="
-                                                display: block;
-                                                height: auto;
-                                                border: 0;
-                                              "
-                                              title="Google+"
-                                              width="32"
-                                          /></a>
-                                        </td>
-                                        <td style="padding: 0 15px 0 0">
-                                          <a
-                                            href="https://instagram.com/"
-                                            target="_blank"
-                                            ><img
-                                              alt="Instagram"
-                                              height="auto"
-                                              src="images/instagram2x.png"
-                                              style="
-                                                display: block;
-                                                height: auto;
-                                                border: 0;
-                                              "
-                                              title="Instagram"
-                                              width="32"
-                                          /></a>
-                                        </td>
-                                      </tr>
-                                    </table>
-                                  </div>
-                                </td>
-                              </tr>
-                            </table>
-                          </td>
-                          <td
-                            class="column column-2"
-                            style="
-                              mso-table-lspace: 0pt;
-                              mso-table-rspace: 0pt;
-                              font-weight: 400;
-                              text-align: left;
-                              padding-bottom: 5px;
-                              padding-top: 5px;
-                              vertical-align: top;
-                              border-top: 0px;
-                              border-right: 0px;
-                              border-bottom: 0px;
-                              border-left: 0px;
-                            "
-                            width="50%"
-                          >
-                            <table
-                              border="0"
-                              cellpadding="5"
-                              cellspacing="0"
-                              class="image_block block-1"
-                              role="presentation"
-                              style="
-                                mso-table-lspace: 0pt;
-                                mso-table-rspace: 0pt;
-                              "
-                              width="100%"
-                            >
-                              <tr>
-                                <td class="pad">
-                                  <div
-                                    align="center"
-                                    class="alignment"
-                                    style="line-height: 10px"
-                                  >
-                                    <div style="max-width: 180px">
-                                      <img
-                                        height="auto"
-                                        src="images/logoblanc.png"
-                                        style="
-                                          display: block;
-                                          height: auto;
-                                          border: 0;
-                                          width: 100%;
-                                        "
-                                        width="180"
-                                      />
-                                    </div>
                                   </div>
                                 </td>
                               </tr>

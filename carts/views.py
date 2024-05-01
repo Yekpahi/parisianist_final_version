@@ -18,12 +18,16 @@ def _cart_id(request):
     if not cart:
         cart = request.session.create()
     return cart
+
+
 def add_to_cart(request, product_id):
     current_user = request.user
     product = Product.objects.get(id=product_id)
-    category_slug = product.category.slug  # Assuming 'category' is a related model and has a 'slug' field
-    product_slug = product.product_slug  # Assuming 'product' model has a 'slug' field
-        # If the user is not authentificated
+    # Assuming 'category' is a related model and has a 'slug' field
+    category_slug = product.category.slug
+    # Assuming 'product' model has a 'slug' field
+    product_slug = product.product_slug
+    # If the user is not authentificated
     if current_user.is_authenticated:
         size_id = request.POST.get('size')
         color_id = request.POST.get('color')
@@ -72,26 +76,27 @@ def add_to_cart(request, product_id):
                 request, "Ce produit n'est pas disponible dans la variation sélectionnée.", extra_tags='cart_error')
             return redirect('product_detail', category_slug=category_slug, product_slug=product_slug)
         try:
-            cart = Cart.objects.get(cart_id=_cart_id(request)) # get the cart using the cart_id present in the session
+            # get the cart using the cart_id present in the session
+            cart = Cart.objects.get(cart_id=_cart_id(request))
         except Cart.DoesNotExist:
             cart = Cart.objects.create(
-                cart_id = _cart_id(request)
+                cart_id=_cart_id(request)
             )
         cart.save()
-        cart_item = CartItem.objects.filter(product=product, cart=cart, variations=variation).first()
+        cart_item = CartItem.objects.filter(
+            product=product, cart=cart, variations=variation).first()
 
         if cart_item:
             cart_item.quantity += 1
             cart_item.save()
         else:
-            cart_item = CartItem.objects.create(product=product, cart=cart, quantity=1)
+            cart_item = CartItem.objects.create(
+                product=product, cart=cart, quantity=1)
             cart_item.variations.add(variation)
 
         messages.success(
             request, "Le produit a été ajouté à votre panier.", extra_tags='cart_success')
         return redirect('product_detail', category_slug=category_slug, product_slug=product_slug)
-
-
 
 
 def increment_quantity(request, product_id):
@@ -146,10 +151,11 @@ def increment_quantity(request, product_id):
                 request, "Ce produit n'est pas disponible dans la variation sélectionnée.", extra_tags='cart_error')
             return redirect('cart')
         try:
-            cart = Cart.objects.get(cart_id=_cart_id(request)) # get the cart using the cart_id present in the session
+            # get the cart using the cart_id present in the session
+            cart = Cart.objects.get(cart_id=_cart_id(request))
         except Cart.DoesNotExist:
             cart = Cart.objects.create(
-                cart_id = _cart_id(request)
+                cart_id=_cart_id(request)
             )
         cart.save()
         cart_item = CartItem.objects.filter(
@@ -166,7 +172,8 @@ def increment_quantity(request, product_id):
         messages.success(
             request, "Le produit a été ajouté à votre panier.", extra_tags='cart_success')
         return redirect('cart')
-    
+
+
 def remove_cart(request, product_id, cart_item_id):
     product = get_object_or_404(Product, id=product_id)
     try:
@@ -229,7 +236,7 @@ def cart(request, total=0, quantity=0, cart_items=None):
     }
     return render(request, 'cart/cart.html', context)
 
-@login_required(login_url="login")
+
 def checkout(request, total=0, quantity=0, cart_items=None):
     try:
         tax = 0
@@ -260,7 +267,8 @@ def checkout(request, total=0, quantity=0, cart_items=None):
 
     return render(request, 'checkout/checkout.html', context)
 
-@login_required(login_url="login")
+
+
 @csrf_exempt
 def payment_done(request):
     returnData = request.POST

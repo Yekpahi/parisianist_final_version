@@ -28,7 +28,7 @@
     <!-- Start The content -->
     <div class="tab-contents">
       <!-- Start place order-->
-{% include './include/place-order-content.html' %}
+             {% include './include/place-order-content.html' %}
       
       <!-- End of place order -->
     </div>
@@ -39,12 +39,14 @@
   <!-- Start of Right informations -->
   <div class="right-side">
     <!-- cart label -->
-    <p class="shopping-cart-title">Shopping cart</p>
+    <div class="right-infos-title">
+      <p class="shopping-cart-title">Shopping cart</p>
+    </div>
 
     <!-- One cart informations -->
     <div class="scroll">
       {% for item in cart_items %}
-      <div class="main-cart">
+  
         <div class="card-container">
           <!-- cart image -->
 
@@ -58,7 +60,7 @@
                     <img src="{{ first_image.variation_image.url }}" alt="{{ first_image.title }}">
                 {% endif %}
             {% endwith %}
-        {% endfor %}
+            {% endfor %}
             <!-- Selection the one image which is feature -->
           </div>
           <!-- End cart image -->
@@ -88,7 +90,7 @@
             <!-- End Quantity remove add and delete cart -->
           </div>
           <!-- End Right informations -->
-        </div>
+
       </div>
       <!-- End One cart informations -->
       {% endfor %}
@@ -99,7 +101,7 @@
         <div class="total-and-tva">
           <ul>
             <li class="total-text">Total</li>
-            <li class="" the-total>{{ grand_total }} Eu</li>
+            <li class="the-total" >{{ grand_total }} Eu</li>
           </ul>
           <p class="tva-infos">
             A VAT of {{tax}} Eur is included in the total price

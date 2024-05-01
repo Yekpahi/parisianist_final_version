@@ -30,7 +30,7 @@ body {
 }
 
 .register-elements {
-  width: 30%;
+  width: 50%;
 }
 
 .register-elements > form {
@@ -105,4 +105,68 @@ body {
 
 .go_to_home > a{
   text-decoration: none;
+}
+
+
+/* Responsive phone*/
+
+@media (max-width: 800px) {
+
+  .register-elements {
+    width: 60%;
+  }
+  .register-header {
+    padding-left: 50px;
+    padding-right: 50px;
+  }
+}
+
+@media (max-width: 639px) {
+
+  .register-elements {
+    width: 70%;
+  } 
+  .register-header .register-header-text {
+    font-size: 0.7em;
+  }
+
+  .register-header {
+    padding-left: 50px;
+    padding-right: 50px;
+  }
+}
+
+
+@media (max-width: 480px) {
+
+  .register-elements {
+    width: 80%;
+  } 
+  .register-header .register-header-text {
+    font-size: 0.7em;
+  }
+
+  .register-header {
+    padding-left: 50px;
+    padding-right: 50px;
+  }
+}
+
+@media (max-width: 375px) {
+
+  .register-header > span > h2 {
+    font-size: 0.9em;
+  }
+
+  .register-elements {
+    width: 90%;
+  } 
+  .register-header .register-header-text {
+    font-size: 0.7em;
+  }
+
+  .register-header {
+    padding-left: 50px;
+    padding-right: 50px;
+  }
 }

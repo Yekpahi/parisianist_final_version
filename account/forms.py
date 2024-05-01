@@ -5,37 +5,23 @@ from account.models import Account, UserProfile
 
 
 class RegistrationForm(forms.ModelForm):
-    first_name = forms.CharField(required=True, widget=forms.TextInput(attrs={"class": "register-all-input", "name": "first_name"}))
-    last_name = forms.CharField(required=True, widget=forms.TextInput(attrs={"class": "register-all-input", "name": "last_name"}))
-    username = forms.CharField(required=True, widget=forms.TextInput(attrs={"class": "register-all-input", "name": "username"}))
-    email = forms.CharField(required=True, widget=forms.EmailInput(attrs={"class": "register-all-input", "name": "email"}))
-    password = forms.CharField(widget=forms.PasswordInput(attrs={"class": "register-all-input", "id":"myPass", "name":"password"}))
-    password2 = forms.CharField(widget=forms.PasswordInput(attrs={"class": "register-all-input", "id":"cmyPass", "name":"password2"}))
+    first_name = forms.CharField(required=True, widget=forms.TextInput(
+        attrs={"class": "register-all-input", "name": "first_name"}))
+    last_name = forms.CharField(required=True, widget=forms.TextInput(
+        attrs={"class": "register-all-input", "name": "last_name"}))
+    username = forms.CharField(required=True, widget=forms.TextInput(
+        attrs={"class": "register-all-input", "name": "username"}))
+    email = forms.CharField(required=True, widget=forms.EmailInput(
+        attrs={"class": "register-all-input", "name": "email"}))
+    password = forms.CharField(widget=forms.PasswordInput(
+        attrs={"class": "register-all-input", "id": "myPass", "name": "password"}))
+    password2 = forms.CharField(widget=forms.PasswordInput(
+        attrs={"class": "register-all-input", "id": "cmyPass", "name": "password2"}))
 
     class Meta:
         model = Account
-        fields = ["first_name", "last_name", "username", "phone_number", "email", "password"]
-
-    def clean_username(self):
-        username = self.cleaned_data['username'].lower()
-        r = Account.objects.filter(username=username)
-        if r.count():
-            raise forms.ValidationError("Username already exists")
-        return username
-    
-    def clean_first_name(self):
-        first_name = self.cleaned_data['first_name'].lower()
-        r = Account.objects.filter(first_name=first_name)
-        if r.count():
-            raise forms.ValidationError("First name already exists")
-        return first_name
-    
-    def clean_last_name(self):
-        last_name = self.cleaned_data['last_name'].lower()
-        r = Account.objects.filter(last_name=last_name)
-        if r.count():
-            raise forms.ValidationError("Last name already exists")
-        return last_name
+        fields = ["first_name", "last_name", "username",
+                  "phone_number", "email", "password"]
 
     def clean_password2(self):
         cd = self.cleaned_data
@@ -50,10 +36,15 @@ class RegistrationForm(forms.ModelForm):
                 'Please use another Email, that is already taken')
         return email
 
+
 class UserForm(forms.ModelForm):
-    first_name = forms.CharField(required=True, widget=forms.TextInput(attrs={"class": "firstname_user", "name": "first_name"}))
-    last_name = forms.CharField(required=True, widget=forms.TextInput(attrs={"class": "lastname_user", "name": "last_name"}))
-    phone_number = forms.CharField(required=True, widget=forms.TextInput(attrs={"class": "phone_user", "name": "phone_number"}))
+    first_name = forms.CharField(required=True, widget=forms.TextInput(
+        attrs={"class": "firstname_user", "name": "first_name"}))
+    last_name = forms.CharField(required=True, widget=forms.TextInput(
+        attrs={"class": "lastname_user", "name": "last_name"}))
+    phone_number = forms.CharField(required=True, widget=forms.TextInput(
+        attrs={"class": "phone_user", "name": "phone_number"}))
+
     class Meta:
         model = Account
         fields = ('first_name', 'last_name', 'phone_number')
@@ -65,15 +56,21 @@ class UserForm(forms.ModelForm):
 
 
 class UserProfileForm(forms.ModelForm):
-    address_line_1 = forms.CharField(required=True, widget=forms.TextInput(attrs={"class": "address_line_1_user", "name": "address_line_1"}))
-    address_line_1 = forms.CharField(required=True, widget=forms.TextInput(attrs={"class": "address_line_2_user", "name": "address_line_2"}))
-    city = forms.CharField(required=True, widget=forms.TextInput(attrs={"class": "city_user", "name": "city"}))
-    country = forms.CharField(required=True, widget=forms.TextInput(attrs={"class": "country_user", "name": "country"}))
-    profile_picture = forms.ImageField(required=False, error_messages={'invalid:':('images files only',)}, widget=forms.FileInput(attrs={"class": "profile_picture_user", "name": "profile_picture"}))
+    address_line_1 = forms.CharField(required=True, widget=forms.TextInput(
+        attrs={"class": "address_line_1_user", "name": "address_line_1"}))
+    address_line_1 = forms.CharField(required=True, widget=forms.TextInput(
+        attrs={"class": "address_line_2_user", "name": "address_line_2"}))
+    city = forms.CharField(required=True, widget=forms.TextInput(
+        attrs={"class": "city_user", "name": "city"}))
+    country = forms.CharField(required=True, widget=forms.TextInput(
+        attrs={"class": "country_user", "name": "country"}))
+    profile_picture = forms.ImageField(required=False, error_messages={'invalid:': (
+        'images files only',)}, widget=forms.FileInput(attrs={"class": "profile_picture_user", "name": "profile_picture"}))
 
     class Meta:
         model = UserProfile
-        fields = ('address_line_1', 'address_line_2', 'city', 'country', 'profile_picture')
+        fields = ('address_line_1', 'address_line_2',
+                  'city', 'country', 'profile_picture')
 
     def __init__(self, *args, **kwargs):
         super(UserProfileForm, self).__init__(*args, **kwargs)

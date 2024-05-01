@@ -6,6 +6,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 import datetime
 from django.shortcuts import render, redirect
+from account.models import Account
 from carts.models import Cart, CartItem
 from store.models import Product
 from .forms import OrderForm
@@ -19,6 +20,8 @@ import stripe
 import uuid
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import AnonymousUser
+
 
 
 @csrf_exempt
@@ -30,7 +33,6 @@ def stripe_config(request):
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
-
 @login_required(login_url="login")
 def stripe_payment(request):
     if request.method == 'GET':
@@ -39,10 +41,11 @@ def stripe_payment(request):
             reverse('stripe_success') + '?session_id={CHECKOUT_SESSION_ID}'
         cancel_url = domain_url + reverse('stripe_cancel')
         stripe.api_key = settings.STRIPE_SECRET_KEY
+        current_user = request.user
 
         try:
             # Créez ou récupérez la commande
-            order = Order.objects.get(user=request.user, is_ordered=False)
+            order = Order.objects.get(user=current_user, is_ordered=False)
 
             # Créez une nouvelle session de paiement Stripe
             checkout_session = stripe.checkout.Session.create(
@@ -91,7 +94,7 @@ def stripe_payment(request):
 
             # Créez un nouvel objet Payment associé à la commande
             payment = Payment.objects.create(
-                user=request.user,
+                user=current_user,
                 payment_id=checkout_session['id'],
                 payment_method='Card',
                 amount_paid=order.order_total,
@@ -107,7 +110,7 @@ def stripe_payment(request):
             # Enregistrez la commande dans la base de données
             order.save()
             # Move the cart items to Order Product table
-            cart_items = CartItem.objects.filter(user=request.user)
+            cart_items = CartItem.objects.filter(user=current_user)
 
             for item in cart_items:
                 orderproduct = OrderProduct()
@@ -132,15 +135,15 @@ def stripe_payment(request):
                 product.save()
 
             # Clear cart
-            CartItem.objects.filter(user=request.user).delete()
+            CartItem.objects.filter(user=current_user).delete()
 
             # Send order received email to customer
             mail_subject = 'Thank you for your order!'
             message = render_to_string('orders/order_received_email.html', {
-                'user': request.user,
+                'user': current_user,
                 'order': order,
             })
-            to_email = request.user.email
+            to_email = order.email
             send_email = EmailMessage(mail_subject, message, to=[to_email])
             send_email.send()
 
@@ -157,6 +160,7 @@ def stripe_payment(request):
             # Retournez une réponse JSON avec l'erreur et un statut 500 en cas d'erreur
             return JsonResponse({'error': str(e)}, status=500)
 # Stripe payment
+
 
 
 def stripe_success(request):
@@ -196,15 +200,23 @@ def stripe_webhook(request):
     return HttpResponse(status=200)
 
 
-@login_required(login_url="login")
 def paypal_payment(request):
     body = json.loads(request.body)
-    order = Order.objects.get(
-        user=request.user, is_ordered=False, order_number=body['orderID'])
+    current_user = request.user if not isinstance(request.user, AnonymousUser) else None
+    order = Order.objects.get(user=current_user, is_ordered=False, order_number=body['orderID'])
+    # If user is anonymous, create a temporary user object
+    
+    if current_user is None:
+        # Generate a unique identifier for the username
+        username = f"AnonymousUser_{uuid.uuid4().hex[:10]}"  # Use a portion of the UUID as a username
+        first_name = order.first_name
+        last_name = order.last_name
 
+        anonymousEmail= order.email
+        current_user = Account.objects.create(username=username, email=anonymousEmail, first_name=first_name, last_name=last_name)
     # Store transaction details inside Payment model
     payment = Payment(
-        user=request.user,
+        user=current_user,
         payment_id=body['transID'],
         payment_method=body['payment_method'],
         amount_paid=order.order_total,
@@ -217,7 +229,7 @@ def paypal_payment(request):
     order.save()
 
     # Move the cart items to Order Product table
-    cart_items = CartItem.objects.filter(user=request.user)
+    cart_items = CartItem.objects.filter(user=current_user)
 
     for item in cart_items:
         orderproduct = OrderProduct()
@@ -242,15 +254,15 @@ def paypal_payment(request):
         product.save()
 
     # Clear cart
-    CartItem.objects.filter(user=request.user).delete()
+    CartItem.objects.filter(user=current_user).delete()
 
-    # Send order recieved email to customer
+    # Send order received email to customer
     mail_subject = 'Thank you for your order!'
     message = render_to_string('orders/order_received_email.html', {
-        'user': request.user,
+        'user': current_user,
         'order': order,
     })
-    to_email = request.user.email
+    to_email = order.email
     send_email = EmailMessage(mail_subject, message, to=[to_email])
     send_email.send()
 
@@ -262,12 +274,13 @@ def paypal_payment(request):
     return JsonResponse(data)
 
 
+
 # Orders
-@login_required(login_url="login")
 def place_order(request, total=0, quantity=0):
 
     pub_key = settings.STRIPE_PUBLIC_KEY
-    current_user = request.user
+    current_user = request.user if not isinstance(
+        request.user, AnonymousUser) else None
     cart_items = CartItem.objects.filter(user=current_user)
     cart_count = cart_items.count()
 
@@ -283,7 +296,7 @@ def place_order(request, total=0, quantity=0):
         total += (cart_item.product.product_price * cart_item.quantity)
         quantity += cart_item.quantity
     tax = (20 * total) / 100
-    taxdhl = 50
+    taxdhl = 1
     grand_total = round((total + tax), 2)
     grand_total_dhl += grand_total + taxdhl
 
@@ -411,11 +424,12 @@ def order_complete(request):
         tax = 0
         grand_total = 0
         grand_total_dhl = 0
+        taxdhl = 0
 
         for i in ordered_products:
             subtotal += i.product_price * i.quantity
             tax += (2*subtotal)/100
-            taxdhl = 50
+            taxdhl = 1
             grand_total += subtotal + tax
             grand_total_dhl += grand_total + taxdhl
 

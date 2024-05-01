@@ -42,6 +42,7 @@ body {
   height: 100%;
   display: flex;
   justify-content: center;
+
 }
 
 .login-contents-container > ul {
@@ -50,6 +51,7 @@ body {
   display: flex;
   flex-direction: column;
   list-style: none;
+ 
 }
 
 .login-contents-container ul > li {
@@ -124,4 +126,41 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+
+/* Responsive phone*/
+
+@media (max-width: 480px) {
+
+  .login-contents-container > ul {
+    width: 320px;
+
+   
+  }
+  .go_to_home{
+    font-size: 0.9em;
+  }
+}
+
+
+@media (max-width: 375px) {
+
+  .login-contents-container > ul {
+    width: 250px;
+    font-size: 0.9em;
+
+   
+  }
+}
+
+
+@media (max-width: 275px) {
+
+  .login-contents-container > ul {
+    width: 200px;
+    font-size: 0.7em;
+
+   
+  }
 }
